@@ -1,3 +1,4 @@
+import ProfileInfo from "./components/profile-info";
 
 export const ContactContainer = () => {
   return( 
@@ -15,6 +16,7 @@ export const ContactContainer = () => {
           <Title text="Channels"></Title>
         </div>
       </div>
+      <ProfileInfo />
     </div>
   )
 };
