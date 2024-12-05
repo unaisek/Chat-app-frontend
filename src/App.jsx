@@ -14,8 +14,6 @@ function App() {
     const PrivateRoute = ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { userInfo } = useAppStore();
-    console.log("private Route userInofr",userInfo);
-    
     const isAuthenticated = !!userInfo
      return isAuthenticated ? children : <Navigate to="/auth" />;
   }
@@ -24,9 +22,7 @@ function App() {
     const AuthRoute = ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { userInfo } = useAppStore();
-    const isAuthenticated = !!userInfo;
-    console.log(isAuthenticated,"authenticated");
-    
+    const isAuthenticated = !!userInfo;  
     return isAuthenticated ? <Navigate to="/chat" /> : children;
    
   };
