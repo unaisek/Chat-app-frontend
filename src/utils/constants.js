@@ -10,3 +10,4 @@ export const USER_ROUTES = "api/user";
 export const UPDATE_PROFILE = `${USER_ROUTES}/update-profile`;
 export const UPDATE_PROFILE_IMAGE = `${USER_ROUTES}/add-profile-image`;
 export const DELETE_PROFILE_IMAGE = `${USER_ROUTES}/delete-profile-image`;
+export const SEARCH_CONTACT_ROUTE = `${USER_ROUTES}/search`;
