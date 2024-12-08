@@ -24,6 +24,22 @@ export const SocketProvider = ({children}) =>{
       socket.current.on("connect", () => {
         
       })
+
+      const handleRecieveMessage = (message) => {
+        const { selectedChatData, selectedChatType, addMessage } =
+          useAppStore.getState();
+
+        if (
+          selectedChatType !== undefined &&
+          (selectedChatData._id === message.sender._id ||
+            selectedChatData._id === message.recipient._id)
+        ) {
+                    
+          addMessage(message)
+        }
+      };
+
+      socket.current.on("reciveMessage",handleRecieveMessage)
       socket.current.on("connect_error", (err) => {
         console.error("Socket connection error:", err.message);
       });
