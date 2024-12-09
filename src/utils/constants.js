@@ -11,3 +11,8 @@ export const UPDATE_PROFILE = `${USER_ROUTES}/update-profile`;
 export const UPDATE_PROFILE_IMAGE = `${USER_ROUTES}/add-profile-image`;
 export const DELETE_PROFILE_IMAGE = `${USER_ROUTES}/delete-profile-image`;
 export const SEARCH_CONTACT_ROUTE = `${USER_ROUTES}/search`;
+export const GET_CONTACTS_DM_ROUTE = `${USER_ROUTES}/get-contacts-for-dm`;
+
+export const MESSAGE_ROUTES ="api/messages";
+export const GET_ALL_MESSAGES_ROUTE =`${MESSAGE_ROUTES}/get-messages`;
+
