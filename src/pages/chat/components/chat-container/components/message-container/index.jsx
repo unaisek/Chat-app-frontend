@@ -1,8 +1,10 @@
 import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
-import { GET_ALL_MESSAGES_ROUTE } from "@/utils/constants";
+import { GET_ALL_MESSAGES_ROUTE, HOST } from "@/utils/constants";
 import moment from "moment";
 import { useEffect, useRef } from "react";
+import { MdFolderZip } from 'react-icons/md'
+import { IoMdArrowRoundDown } from 'react-icons/io'
 
 const MessageContainer = () => {
 
@@ -52,7 +54,15 @@ const MessageContainer = () => {
       scrollRef.current.scrollIntoView({behaviour: "smooth"})
     }
   }, [selectedChatMessages])
+
+  const checkIfImage = (filePath)=>{
+    const imageRegex = /\.(jpg|jpeg|webp|png|gif|bmp|tif|tiff|svg|ico|heic|heif)$/i;
+    return imageRegex.test(filePath)
+  }
   
+  const downloadFile = (file) => {
+
+  }
 
   const renderMessages = () => {
     let lastDate = null;
@@ -89,6 +99,36 @@ const MessageContainer = () => {
           } border inline-block rounded my-1 max-w-[50%] break-words p-2`}
         >
           {message.content}
+        </div>
+      )}
+      {message.messageType === "file" && (
+        <div
+          className={`${
+            message.sender !== selectedChatData._id
+              ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
+              : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
+          } border inline-block rounded my-1 max-w-[50%] break-words p-2`}
+        >
+          {checkIfImage(message.fileUrl) ? (
+            <div className="cursor-pointer ">
+              <img
+                src={`${HOST}/${message.fileUrl}`}
+                height={300}
+                width={300}
+              />
+            </div>
+          ) : (
+            <div className="flex justify-center items-center">
+              <span className="text-white/80 text-3xl bg-black/20 rounded-full p-3">
+                <MdFolderZip />
+              </span>
+              <span>{message.fileUrl.split('/').pop()}</span>
+              <span className="bg-black/20 text-2xl rounded-full p-3 hover:bg-black/50 cursor-pointer transition-all duration-300"
+              onClick={()=>downloadFile(message.fileUrl)}>
+                <IoMdArrowRoundDown />
+              </span>
+            </div>
+          )}
         </div>
       )}
       <div className="text-xs text-gray-600 ">
