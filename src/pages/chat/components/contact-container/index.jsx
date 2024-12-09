@@ -3,18 +3,29 @@ import NewDM from "./components/new-dm";
 import ProfileInfo from "./components/profile-info";
 import { apiClient } from "@/lib/api-client";
 import { GET_CONTACTS_DM_ROUTE } from "@/utils/constants";
+import { useAppStore } from "@/store";
+
+import ContactList from "@/components/contact-list";
 
 export const ContactContainer = () => {
-  useEffect(()=>{
-    const getContacts = async () =>{
-      const response = await apiClient.get(GET_CONTACTS_DM_ROUTE,{withCredentials: true})
-      if(response.data.contacts){
-        
-      }
+  const { directedMessagesContacts, setDirectedMessagesContacts } =
+    useAppStore();
+
+  useEffect(() => {
+    if (!directedMessagesContacts || directedMessagesContacts.length === 0) {
+      const getContacts = async () => {
+        const response = await apiClient.get(GET_CONTACTS_DM_ROUTE, {
+          withCredentials: true,
+        });
+        if (response.data.contacts) {
+          setDirectedMessagesContacts(response.data.contacts);
+        }
+      };
+
+      getContacts();
     }
-    getContacts()
-        
-  },[])
+  }, [setDirectedMessagesContacts,directedMessagesContacts]);
+
   return (
     <div className="relative md:w-[35vw] lg:[30vw] xl:[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full">
       <div className="pt-3">
@@ -24,6 +35,9 @@ export const ContactContainer = () => {
         <div className="flex items-center justify-between pr-10">
           <Title text="Direct Messages" />
           <NewDM />
+        </div>
+        <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+          <ContactList contacts={directedMessagesContacts} />
         </div>
       </div>
       <div className="my-5">

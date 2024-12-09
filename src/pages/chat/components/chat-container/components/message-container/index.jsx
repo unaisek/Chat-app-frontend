@@ -12,32 +12,45 @@ const MessageContainer = () => {
     userInfo,
     selectedChatMessages,
     setSelectedChatMessages,
+    messageFetched,
+    setMessageFetched,
   } = useAppStore();
   const scrollRef = useRef()
 
   useEffect(() => {
     const getMessages = async () => {
-      const response = await apiClient.post(GET_ALL_MESSAGES_ROUTE,{id:selectedChatData._id}, {withCredentials: true});
-      if(response.data.messages){
-        setSelectedChatMessages(response.data.messages)
-        
+      try {
+        const response = await apiClient.post(
+          GET_ALL_MESSAGES_ROUTE,
+          { id: selectedChatData._id },
+          { withCredentials: true }
+        );
+        if (response.data.messages) {
+          setSelectedChatMessages(response.data.messages);
+          setMessageFetched(true)
+        }
+      } catch (error) {
+        console.log(error);       
       }
     }
     if(selectedChatData._id){
-      if(selectedChatType === "contact") getMessages();
+      if(selectedChatType === "contact" && !messageFetched) {
+        getMessages();
+      }
     }
   }, [
     selectedChatData,
     selectedChatType,
     setSelectedChatMessages,
+    selectedChatMessages,
+    messageFetched,
+    setMessageFetched
   ]);
 
   useEffect(() => {
     if(scrollRef.current){
       scrollRef.current.scrollIntoView({behaviour: "smooth"})
     }
-  
-    
   }, [selectedChatMessages])
   
 
@@ -73,7 +86,7 @@ const MessageContainer = () => {
             message.sender !== selectedChatData._id
               ? " bg-[#8417ff]/5 text-[#8417ff]/90 border-[#8417ff]/50"
               : "bg-[#2a2b33]/5 text-white/80 border-[#ffffff]/20"
-          } border inline-block rounded my-1 max-w-[50%] break-words`}
+          } border inline-block rounded my-1 max-w-[50%] break-words p-2`}
         >
           {message.content}
         </div>
@@ -84,7 +97,7 @@ const MessageContainer = () => {
     </div>
   );
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[65vw] lg:w-[70vw] xl:w-[80vw] w-full">
+    <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[60vw] lg:w-[60vw] xl:w-[80vw] w-full">
       {renderMessages()}
     </div>
   )
