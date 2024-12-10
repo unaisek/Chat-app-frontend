@@ -2,9 +2,10 @@ import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
 import { GET_ALL_MESSAGES_ROUTE, HOST } from "@/utils/constants";
 import moment from "moment";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdFolderZip } from 'react-icons/md'
 import { IoMdArrowRoundDown } from 'react-icons/io'
+import { IoCloseSharp } from "react-icons/io5";
 
 const MessageContainer = () => {
 
@@ -18,7 +19,8 @@ const MessageContainer = () => {
     setMessageFetched,
   } = useAppStore();
   const scrollRef = useRef()
-
+  const  [showImage, setShowImage] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null)
   useEffect(() => {
     const getMessages = async () => {
       try {
@@ -60,8 +62,18 @@ const MessageContainer = () => {
     return imageRegex.test(filePath)
   }
   
-  const downloadFile = (file) => {
-
+  const downloadFile =  async(url) => {
+    const response = await apiClient.get(`${HOST}/${url}`,{
+      responseType: "blob"
+    });
+    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = urlBlob;
+    link.setAttribute("download",url.split('/').pop());
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(urlBlob);
   }
 
   const renderMessages = () => {
@@ -110,7 +122,12 @@ const MessageContainer = () => {
           } border inline-block rounded my-1 max-w-[50%] break-words p-2`}
         >
           {checkIfImage(message.fileUrl) ? (
-            <div className="cursor-pointer ">
+            <div className="cursor-pointer"
+            
+            onClick={() => {
+              setShowImage(true);
+              setImageUrl(message.fileUrl)
+              }}>
               <img
                 src={`${HOST}/${message.fileUrl}`}
                 height={300}
@@ -139,8 +156,39 @@ const MessageContainer = () => {
   return (
     <div className="flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 md:w-[60vw] lg:w-[60vw] xl:w-[80vw] w-full">
       {renderMessages()}
+      <div ref={scrollRef} />
+      {showImage && (
+        <div className="z-[1000] fixed top-0 left-0 h-[100vh] w-[100vw] flex justify-center items-center backdrop-blur-lg flex-col">
+          <div>
+            <img
+              src={`${HOST}/${imageUrl}`}
+              alt=""
+              className="h-[80vh] w-full bg-cover"
+            />
+          </div>
+          <div className="fixed top-0 gap-5 flex mt-2">
+            <button
+              className="bg-black/20 text-2xl rounded-full p-3 hover:bg-black/50 cursor-pointer transition-all duration-300"
+              onClick={() => {
+                downloadFile(imageUrl)
+              }}
+            >
+              <IoMdArrowRoundDown />
+            </button>
+            <button
+              className="bg-black/20 text-2xl rounded-full p-3 hover:bg-black/50 cursor-pointer transition-all duration-300"
+              onClick={() => {
+                setImageUrl(null);
+                setShowImage(false);
+              }}
+            >
+              <IoCloseSharp />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 export default MessageContainer
