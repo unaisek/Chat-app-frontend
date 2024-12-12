@@ -7,16 +7,18 @@ import { MdFolderZip } from 'react-icons/md'
 import { IoMdArrowRoundDown } from 'react-icons/io'
 import { IoCloseSharp } from "react-icons/io5";
 
+
 const MessageContainer = () => {
 
   const {
     selectedChatData,
     selectedChatType,
-    userInfo,
     selectedChatMessages,
     setSelectedChatMessages,
     messageFetched,
     setMessageFetched,
+    setFileDownloadProgress,
+    setIsDownloading,
   } = useAppStore();
   const scrollRef = useRef()
   const  [showImage, setShowImage] = useState(false);
@@ -48,7 +50,7 @@ const MessageContainer = () => {
     setSelectedChatMessages,
     selectedChatMessages,
     messageFetched,
-    setMessageFetched
+    setMessageFetched,
   ]);
 
   useEffect(() => {
@@ -63,8 +65,15 @@ const MessageContainer = () => {
   }
   
   const downloadFile =  async(url) => {
+    setIsDownloading(true);
+    setFileDownloadProgress(0)
     const response = await apiClient.get(`${HOST}/${url}`,{
-      responseType: "blob"
+      responseType: "blob",
+      onDownloadProgress: (ProgressEvent) => {
+        const { loaded, total} = ProgressEvent;
+        const percentCompleted = Math.round((loaded * 100)/ total)
+        setFileDownloadProgress(percentCompleted);
+      }
     });
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
@@ -74,6 +83,8 @@ const MessageContainer = () => {
     link.click();
     link.remove();
     window.URL.revokeObjectURL(urlBlob);
+    setIsDownloading(false);
+    setFileDownloadProgress(0)
   }
 
   const renderMessages = () => {
@@ -83,7 +94,7 @@ const MessageContainer = () => {
       const showDate = messageDate !== lastDate ;
       lastDate = messageDate
       return (
-        <div key={message}>
+        <div key={index}>
           {showDate && (
             <div className="text-center text-gray-500 my-2">
               {moment(message.timestamp).format("LL")}
