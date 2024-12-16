@@ -6,9 +6,10 @@ import { GET_CONTACTS_DM_ROUTE } from "@/utils/constants";
 import { useAppStore } from "@/store";
 
 import ContactList from "@/components/contact-list";
+import CreateChannel from "./components/create-channel";
 
 export const ContactContainer = () => {
-  const { directedMessagesContacts, setDirectedMessagesContacts } =
+  const { directedMessagesContacts, setDirectedMessagesContacts, channels } =
     useAppStore();
 
   useEffect(() => {
@@ -43,6 +44,10 @@ export const ContactContainer = () => {
       <div className="my-5">
         <div className="flex items-center justify-between pr-10">
           <Title text="Channels"></Title>
+          <CreateChannel />
+        </div>
+        <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+          <ContactList contacts={channels}  isChannel={true} />
         </div>
       </div>
       <ProfileInfo />

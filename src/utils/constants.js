@@ -12,8 +12,12 @@ export const UPDATE_PROFILE_IMAGE = `${USER_ROUTES}/add-profile-image`;
 export const DELETE_PROFILE_IMAGE = `${USER_ROUTES}/delete-profile-image`;
 export const SEARCH_CONTACT_ROUTE = `${USER_ROUTES}/search`;
 export const GET_CONTACTS_DM_ROUTE = `${USER_ROUTES}/get-contacts-for-dm`;
+export const GET_ALL_CONTACTS = `${USER_ROUTES}/get-all-contacts`;
 
 export const MESSAGE_ROUTES ="api/messages";
 export const GET_ALL_MESSAGES_ROUTE =`${MESSAGE_ROUTES}/get-messages`;
 export const UPLOAD_FILE_ROUTE = `${MESSAGE_ROUTES}/upload-file`;
+
+export const CHANNEL_ROUTE = "api/channel";
+export const CREATE_CHANNEL_ROUTE =`${CHANNEL_ROUTE}/create-channel`
 
