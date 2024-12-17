@@ -16,14 +16,14 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { apiClient } from "@/lib/api-client";
-import { CREATE_CHANNEL_ROUTE, GET_ALL_CONTACTS, HOST } from "@/utils/constants";
+import { CREATE_CHANNEL_ROUTE, GET_ALL_CONTACTS, } from "@/utils/constants";
 
 import { useAppStore } from "@/store";
 import { Button } from "@/components/ui/button";
 import MultipleSelector from "@/components/ui/multiselect";
 
 const CreateChannel = () => {
-  const { setSelectedChatType, setSelectedChatData, addChannel } = useAppStore();
+  const { addChannel } = useAppStore();
   const [newChannelModal, setNewChannelModal] = useState(false);
   const [allContacts, setAllContacts] = useState([])
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -33,9 +33,8 @@ const CreateChannel = () => {
     const getData = async ()=> {
       const response = await apiClient.get(GET_ALL_CONTACTS,{withCredentials: true});
       setAllContacts(response.data.contacts)
-    
-      
     }
+
     getData()
   },[])
 
@@ -56,7 +55,6 @@ const CreateChannel = () => {
     }
   } catch (error) {
     console.log(error);
-    
   }
  }
   return (

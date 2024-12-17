@@ -11,27 +11,36 @@ const ChatHeader = () => {
       <div className="flex items-center gap-5 w-full justify-between">
         <div className="flex gap-3 items-center justify-center">
           <div className=" ms-4 w-10 h-10 relative">
-            <Avatar className="h-10 w-10 rounded-full overflow-hidden">
-              {selectedChatData.image ? (
-                <AvatarImage
-                  src={`${HOST}/${selectedChatData.image}`}
-                  className="object-cover w-full h-full bg-red-700"
-                />
-              ) : (
-                <div
-                  className={`uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full  ${getColor(
-                    selectedChatData.selectedColour
-                  )}`}
-                >
-                  {selectedChatData.firstName
-                    ? selectedChatData.firstName.split("").shift()
-                    : selectedChatData.email.split("").shift()}
-                </div>
-              )}
-            </Avatar>
+            {selectedChatType === "contact" ? (
+              <Avatar className="h-10 w-10 rounded-full overflow-hidden">
+                {selectedChatData.image ? (
+                  <AvatarImage
+                    src={`${HOST}/${selectedChatData.image}`}
+                    className="object-cover w-full h-full bg-red-700"
+                  />
+                ) : (
+                  <div
+                    className={`uppercase h-10 w-10 text-lg border-[1px] flex items-center justify-center rounded-full  ${getColor(
+                      selectedChatData.selectedColour
+                    )}`}
+                  >
+                    {selectedChatData.firstName
+                      ? selectedChatData.firstName.split("").shift()
+                      : selectedChatData.email.split("").shift()}
+                  </div>
+                )}
+              </Avatar>
+            ) : (
+              <div className="bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full">
+                #
+              </div>
+            )}
           </div>
           <div>
-            {selectedChatType === "contact" && selectedChatData.firstName ?  `${selectedChatData.firstName} ${ selectedChatData.lastName}`: selectedChatData.email}
+            { selectedChatType === "channel" && selectedChatData.name}
+            {selectedChatType === "contact" && selectedChatData.firstName
+              ? `${selectedChatData.firstName} ${selectedChatData.lastName}`
+              : selectedChatData.email}
           </div>
         </div>
         <div className="flex items-center justify-center gap-5">
