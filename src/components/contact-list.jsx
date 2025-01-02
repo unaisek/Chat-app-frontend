@@ -4,7 +4,7 @@ import { HOST } from "@/utils/constants";
 import { getColor } from "@/lib/utils";
 
 const ContactList = ({contacts, isChannel = false}) => {
-  const {selectedChatData, setSelectedChatData, selectedChatType, setSelectedChatType, setSelectedChatMessages } = useAppStore();
+  const {selectedChatData, setSelectedChatData, setSelectedChatType, setSelectedChatMessages } = useAppStore();
 
   const handleClick = (contact) => {
     if (isChannel) setSelectedChatType("channel");
