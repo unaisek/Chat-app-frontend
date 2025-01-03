@@ -29,8 +29,6 @@ export const Profile = () => {
     }
     if(userInfo.image){
       setImage(`${HOST}/${userInfo.image}`)  
-      console.log(image);
-       
     }
   },[userInfo,image])
 

@@ -4,12 +4,19 @@ import { HOST } from "@/utils/constants";
 import { getColor } from "@/lib/utils";
 
 const ContactList = ({contacts, isChannel = false}) => {
-  const {selectedChatData, setSelectedChatData, setSelectedChatType, setSelectedChatMessages } = useAppStore();
+  const {
+    selectedChatData,
+    setSelectedChatData,
+    setSelectedChatType,
+    setSelectedChatMessages,
+    setMessageFetched,
+  } = useAppStore();
 
   const handleClick = (contact) => {
     if (isChannel) setSelectedChatType("channel");
     else setSelectedChatType("contact");
     setSelectedChatData(contact);
+    setMessageFetched(false)
     if(selectedChatData && selectedChatData._id !== contact._id) {
       setSelectedChatMessages([])
     }
@@ -59,7 +66,7 @@ const ContactList = ({contacts, isChannel = false}) => {
             {isChannel ? (
               <span>{contact.name}</span>
             ) : (
-              <span>{`${contact.firstName} ${contact.lastName}`}</span>
+              <span>{contact.firstName ? `${contact.firstName} ${contact.lastName}`: contact.email}</span>
             )}
           </div>
         </div>
