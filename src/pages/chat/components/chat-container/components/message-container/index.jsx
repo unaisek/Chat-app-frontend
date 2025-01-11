@@ -161,7 +161,7 @@ const MessageContainer = () => {
               setImageUrl(message.fileUrl)
               }}>
               <img
-                src={`${HOST}/${message.fileUrl}`}
+                src={`${message.fileUrl}`}
                 height={300}
                 width={300}
               />
@@ -221,7 +221,7 @@ const MessageContainer = () => {
                 }}
               >
                 <img
-                  src={`${HOST}/${message.fileUrl}`}
+                  src={`${message.fileUrl}`}
                   height={300}
                   width={300}
                 />
@@ -247,7 +247,7 @@ const MessageContainer = () => {
             <Avatar className="h-8 w-8 rounded-full overflow-hidden">
               {message.sender.image && (
                 <AvatarImage
-                  src={`${HOST}/${message.sender.image}`}
+                  src={`${message.sender.image}`}
                   className="object-cover w-full h-full bg-red-700"
                 />
               )}
@@ -284,7 +284,7 @@ const MessageContainer = () => {
         <div className="z-[1000] fixed top-0 left-0 h-[100vh] w-[100vw] flex justify-center items-center backdrop-blur-lg flex-col">
           <div>
             <img
-              src={`${HOST}/${imageUrl}`}
+              src={`${imageUrl}`}
               alt=""
               className="h-[80vh] w-full bg-cover"
             />

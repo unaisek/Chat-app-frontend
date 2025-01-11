@@ -9,33 +9,42 @@ import ContactList from "@/components/contact-list";
 import CreateChannel from "./components/create-channel";
 
 export const ContactContainer = () => {
-  const { directedMessagesContacts, setDirectedMessagesContacts, channels, setChannels } =
-    useAppStore();
+  const {
+    directedMessagesContacts,
+    setDirectedMessagesContacts,
+    channels,
+    setChannels,
+    dMContactsAndChannelFetched,
+    setDMContactsAndChannelFetched,
+  } = useAppStore();
 
   useEffect(() => {
-    if (!directedMessagesContacts || directedMessagesContacts.length === 0) {
-      const getContacts = async () => {
-        const response = await apiClient.get(GET_CONTACTS_DM_ROUTE, {
-          withCredentials: true,
-        });
-        if (response.data.contacts) {
-          setDirectedMessagesContacts(response.data.contacts);
-        }
-      };
+    if (!dMContactsAndChannelFetched){
+      if (!directedMessagesContacts || directedMessagesContacts.length === 0) {
+        const getContacts = async () => {
+          const response = await apiClient.get(GET_CONTACTS_DM_ROUTE, {
+            withCredentials: true,
+          });
+          if (response.data.contacts) {
+            setDirectedMessagesContacts(response.data.contacts);
+          }
+        };
 
-       const getChannles = async () => {
-         const response = await apiClient.get(GET_USER_CHANNEL_ROUTE, {
-           withCredentials: true,
-         });
-         if (response.data.channels) {
-           setChannels(response.data.channels);
-         }
-       };
+        const getChannles = async () => {
+          const response = await apiClient.get(GET_USER_CHANNEL_ROUTE, {
+            withCredentials: true,
+          });
+          if (response.data.channels) {
+            setChannels(response.data.channels);
+          }
+        };
 
-      getContacts();
-      getChannles()
+        getContacts();
+        getChannles();
+      }
+      setDMContactsAndChannelFetched(true);
     }
-  }, [setDirectedMessagesContacts,directedMessagesContacts, setChannels]);
+  }, [setDirectedMessagesContacts,directedMessagesContacts, setChannels, setDMContactsAndChannelFetched, dMContactsAndChannelFetched]);
 
   return (
     <div className="relative md:w-[35vw] lg:[30vw] xl:[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full">

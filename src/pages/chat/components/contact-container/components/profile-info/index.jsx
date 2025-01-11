@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import { HOST, LOGOUT_ROUTE } from "@/utils/constants";
+import {LOGOUT_ROUTE } from "@/utils/constants";
 import { Avatar,AvatarImage } from "@/components/ui/avatar";
 import { getColor } from "@/lib/utils";
 import { Tooltip,TooltipProvider, TooltipTrigger, TooltipContent} from "@/components/ui/tooltip";
@@ -9,7 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { apiClient } from "@/lib/api-client";
 
 const ProfileInfo = () => {
-  const { userInfo, setUserInfo } =useAppStore()
+  const {
+    userInfo,
+    setUserInfo,
+    setDirectedMessagesContacts,
+    setChannels,
+    setDMContactsAndChannelFetched,
+  } = useAppStore();
   const navigate = useNavigate()
 
   const logOut = async () => {
@@ -17,7 +23,10 @@ const ProfileInfo = () => {
       const response = await apiClient.post(LOGOUT_ROUTE,{},{withCredentials:true});
       if(response.status == 200){
         navigate("/auth");
-        setUserInfo(null)
+        setUserInfo(null);
+        setDirectedMessagesContacts([]);
+        setChannels([])
+        setDMContactsAndChannelFetched(false);
       }
     } catch (error) {
       console.log(error);
@@ -31,7 +40,7 @@ const ProfileInfo = () => {
           <Avatar className="h-12 w-12 rounded-full overflow-hidden">
             {userInfo.image ? (
               <AvatarImage
-                src={`${HOST}/${userInfo.image}`}
+                src={`${userInfo.image}`}
                 className="object-cover w-full h-full bg-red-700"
               />
             ) : (
@@ -42,7 +51,7 @@ const ProfileInfo = () => {
               >
                 {userInfo.firstName
                   ? userInfo.firstName.split("").shift()
-                  : userInfo.email.split("").shift()}
+                  : userInfo?.email?.split("").shift()}
               </div>
             )}
           </Avatar>

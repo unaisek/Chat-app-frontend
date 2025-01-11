@@ -1,6 +1,6 @@
 import { useAppStore } from "@/store"
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { useEffect } from "react";
 import ChatContainer from "./components/chat-container";
 import ContactContainer from "./components/contact-container";
@@ -15,10 +15,11 @@ export const Chat = ()=>{
    } = useAppStore();
   const navigate = useNavigate();
   
-  useEffect (() => {
-    if(!userInfo.profileSetup){
-      toast("Please setup your profile")
-      navigate("/profile")
+  useEffect (() => {  
+    if (userInfo && !userInfo.profileSetup) {
+      
+      toast.error("Please setup your profile");
+      navigate("/profile");
     }
   },[userInfo, navigate])
   

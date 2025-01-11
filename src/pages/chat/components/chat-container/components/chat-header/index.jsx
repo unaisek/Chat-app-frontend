@@ -1,7 +1,6 @@
 import { useAppStore } from '@/store'
 import { RiCloseFill  } from 'react-icons/ri'
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { HOST } from '@/utils/constants';
 import { getColor } from '@/lib/utils';
 const ChatHeader = () => {
 
@@ -15,7 +14,7 @@ const ChatHeader = () => {
               <Avatar className="h-10 w-10 rounded-full overflow-hidden">
                 {selectedChatData.image ? (
                   <AvatarImage
-                    src={`${HOST}/${selectedChatData.image}`}
+                    src={`${selectedChatData.image}`}
                     className="object-cover w-full h-full bg-red-700"
                   />
                 ) : (

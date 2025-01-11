@@ -1,7 +1,7 @@
 import { useAppStore } from "@/store";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { IoArrowBack } from "react-icons/io5";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { colors, getColor } from "@/lib/utils";
@@ -9,7 +9,7 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { apiClient } from "@/lib/api-client";
-import { DELETE_PROFILE_IMAGE, HOST, UPDATE_PROFILE,UPDATE_PROFILE_IMAGE } from "@/utils/constants";
+import { DELETE_PROFILE_IMAGE, UPDATE_PROFILE,UPDATE_PROFILE_IMAGE } from "@/utils/constants";
 
 export const Profile = () => {
   const { userInfo, setUserInfo } = useAppStore();
@@ -28,7 +28,7 @@ export const Profile = () => {
       setSelectedColour(userInfo.color)
     }
     if(userInfo.image){
-      setImage(`${HOST}/${userInfo.image}`)  
+      setImage(`${userInfo.image}`)  
     }
   },[userInfo,image])
 
@@ -49,9 +49,11 @@ export const Profile = () => {
       try {
         const response = await apiClient.post(UPDATE_PROFILE, {
           firstName, lastName, color: selectedColour
-        }, { withCredentials:true });
+        }, { withCredentials:true });       
         if(response.status === 200 && response.data){
-          setUserInfo({...response.data});    
+          setUserInfo({...response.data.user}); 
+          console.log({ ...response.data },"after save chnges in profile");
+                     
           toast.success("profile updated successfully");
           navigate("/chat")
         }
@@ -76,12 +78,13 @@ export const Profile = () => {
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
-    console.log(file);
     if(file){
       const formData = new FormData();
       formData.append("profile-image", file);
       const response = await apiClient.post(UPDATE_PROFILE_IMAGE,formData,{withCredentials:true});
       if(response.status == 200 && response.data.image){
+        console.log(userInfo,"after updating images");
+        
         setUserInfo({...userInfo, image: response.data.image });
         toast.success("profile image updated successfully")
       }       
@@ -128,7 +131,7 @@ export const Profile = () => {
                 >
                   {firstName
                     ? firstName.split("").shift()
-                    : userInfo.email.split("").shift()}
+                    : userInfo?.email?.split("").shift()}
                 </div>
               )}
             </Avatar>

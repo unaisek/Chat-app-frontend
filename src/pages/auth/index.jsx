@@ -5,7 +5,7 @@ import Background from "../../assets/login2.png";
 import Victory from "../../assets/victory.svg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { apiClient } from '../../lib/api-client'
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
@@ -51,12 +51,29 @@ export const Auth = () => {
 
 
   const handleLogin = async () => {
-    if(validateLogin()){
-      const response = await apiClient.post(LOGIN_ROUTE,{email, password},{withCredentials:true});
-      setUserInfo(response.data.user)
-      if(response.data.user.id){
-        if(response.data.user.profileSetup) navigate('/chat')
-          else navigate('/profile')
+    try {
+      if (validateLogin()) {
+        const response = await apiClient.post(
+          LOGIN_ROUTE,
+          { email, password },
+          { withCredentials: true }
+        );
+        setUserInfo(response.data.user);
+
+        if (response.data.user.id) {
+          toast.success("Login successful!");
+          if (response.data.user.profileSetup) navigate("/chat");
+          else navigate("/profile");
+        }
+      }
+    } catch (error) {    
+      if (
+        error.response &&
+        error.response.data 
+      ) {
+        toast.error(error.response.data);
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   };
@@ -72,9 +89,9 @@ export const Auth = () => {
   };
 
   return (
-    <div className="h-[100vh] lg:h-[120vh] w-[100vw] flex items-center justify-center">
-      <div className="h-[80vh] lg:h-[100vh] bg-white border-2 border-white text-opacity-90 shadow-2xl w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
-        <div className="flex items-center justify-center flex-col gap-10">
+    <div className="h-[100vh]  w-[100vw] flex items-center justify-center">
+      <div className="h-[90vh] bg-white border-2 border-white text-opacity-90 shadow-2xl w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
+        <div className="flex items-center justify-center flex-col gap-8">
           <div className="flex items-center justify-center flex-col">
             <div className="flex items-center justify-center">
               <h1 className="text-5xl font-bold md:text-6xl"> Welcome</h1>
@@ -100,7 +117,10 @@ export const Auth = () => {
                   Signup
                 </TabsTrigger>
               </TabsList>
-              <TabsContent value="login" className="flex flex-col gap-5 mt-10">
+              <TabsContent
+                value="login"
+                className="flex flex-col gap-5 mt-10 max-h-[300px]"
+              >
                 <Input
                   placeholder="email"
                   type="email"
@@ -115,12 +135,14 @@ export const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button
-                  className="rounded-full p-6"
-                  onClick={handleLogin}
-                >Login</Button>
+                <Button className="rounded-full p-6" onClick={handleLogin}>
+                  Login
+                </Button>
               </TabsContent>
-              <TabsContent className="flex flex-col gap-5" value="signup">
+              <TabsContent
+                className="flex flex-col gap-5 max-h-[300px]"
+                value="signup"
+              >
                 <Input
                   placeholder="email"
                   type="email"
@@ -142,16 +164,15 @@ export const Auth = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <Button
-                  className="rounded-full p-6"
-                  onClick={handleSignup}
-                >SignUp</Button>
+                <Button className="rounded-full p-6" onClick={handleSignup}>
+                  SignUp
+                </Button>
               </TabsContent>
             </Tabs>
           </div>
         </div>
         <div className="hidden xl:flex justify-center items-center">
-          <img src={Background} className="h-[500px]  2xl:h-[600px]" alt="" />
+          <img src={Background} className="h-[380px]  2xl:h-[500px]" alt="" />
         </div>
       </div>
     </div>
